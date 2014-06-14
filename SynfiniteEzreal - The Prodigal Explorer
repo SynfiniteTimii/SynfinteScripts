@@ -14,13 +14,33 @@
 
 
 --Version--
-local version = "0.1"
+local Version = "0.1"
+_G.ScriptVersion = "0.1"
+_G.AutoUpdate = true
+_G.Author = "Timii"
+_G.LoadedText = "SyfiniteEzreal"
 
 --Champion--
 if myHero.charName ~= "Ezreal" then return end
 
---Auto-Update: Thanks to Honda & Skeem--
-local AutoUpdate = true
-local UPDATE_SCRIPTE_AME = "SynfiniteEzreal - The Prodigal Explorer"
+--Auto-Update: Thanks to QQQ--
+local UPDATE_FILE_PATH = SCRIPT_PATH.."SynfiniteEzreal - The Prodigal Explorer"
+local UPDATE_NAME = "SynfiniteEzreal - The Prodigal Explorer"
 local UPDATE_HOST = "raw.github.com"
 local UPDATE_PATH = "/SynfiniteTimii/SynfinteScripts/master/Scripts/SynfiniteEzreal%20-%20The%20Prodigal%20Explorer?chunk="..math.random(1, 1000)
+local UPDATE_URL = "https://"..UPDATE_HOST..UPDATE_PATH
+
+--Message Display--
+function Messages(MSG) print("<font color=\"#000000\">[</font><font color=\"#FFBF00\">".._G.LoadedText.."</font><font color=\"#000000\">]</font> "..MSG..) end
+
+if _G.AutoUpdate then
+	local ServerData = GetWebResult (UPDATE_HOST, UPDATE_PATH)
+	if ServerData then
+		local ServerVersion = string.match(ServerData, "_G.ScriptVersion = \"%d+.%d+\"")
+		ServerVersion = string.match(ServerVersion and ServerVersion or "", "%d+.%d+")
+		if ServerVersion then
+			ServerVersion = tonumber(ServerVersion)
+			if tonumber (_G.ScriptVersion) < ServerVersion then
+				Messages("<font color=\"#151515\"> Script is not updated. Current Version: </font> <font color=\"#8A0808\">".._G.ScriptVersion.."</font> <font color=\"#151515\">Latest Version: </font> <font color=\"#8A0808\">"..ServerVersion.."</font>.")
+
+end
