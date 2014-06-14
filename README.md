@@ -1,4 +1,2 @@
-SynfinteScripts
-===============
-
-By Timii
+# SynfiniteScripts 
+### By Timii
