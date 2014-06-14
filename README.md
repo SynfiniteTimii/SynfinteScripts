@@ -1,4 +1,4 @@
 SynfinteScripts
 ===============
 
-BoL - SynfiniteScripts
+By Timii
