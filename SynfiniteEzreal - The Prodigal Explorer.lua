@@ -44,17 +44,17 @@ function AUpdate()
 			ServerVersion = string.match(ServerVersion and ServerVersion or "", "%d.%d%d")
 			if ServerVersion then
 				if ScriptVersion ~= ServerVersion then
-					Messages("<font color=\"#151515\"> Script is not updated. Current Version: </font> <font color=\"#8A0808\">"..ScriptVersion.."</font> <font color=\"#151515\">Latest Version: </font> <font color=\"#8A0808\">"..ServerVersion.."</font>.")
-					Messages("<font color=\"#151515\">Now Updating Script to </font><font color=\"#8A0808\">v."..ServerVersion.."</font><font color=\"#151515\">. Do not press [F9].</font>")
+					Messages("<font color=\"#848484\"> Script is not updated. Current Version: </font> <font color=\"#8A0808\">"..ScriptVersion.."</font> <font color=\"#848484\">Latest Version: </font> <font color=\"#8A0808\">"..ServerVersion.."</font>.")
+					Messages("<font color=\"#151515\">Now Updating Script to </font><font color=\"#8A0808\">v."..ServerVersion.."</font><font color=\"#848484\">. Do not press [F9]</font>.")
 					DelayAction(function() DownloadFile(UPDATE_URL, UPDATE_FILE_PATH, function ()
-					Messages("<font color=\"#151515\">Succesfully Updated </font><font color=\"#FFBF00\">"..LoadedText.."</font> <font color=\"#151515\"> to </font><font color=\"#8A0808\">v."..ServerVersion.."</font>.") end) end, 3)
-					Messages("<font color=\"#151515\">Please reload the script for changes to take effect.</font>")
+					Messages("<font color=\"#848484\">Succesfully Updated </font><font color=\"#FFBF00\">"..LoadedText.."</font> <font color=\"#848484\"> to </font><font color=\"#8A0808\">v."..ServerVersion.."</font>.") end) end, 3)
+					Messages("<font color=\"#848484\">Please reload the script for changes to take effect</font>.")
 				else 
-					Messages("<font color=\"#151515\">Your script is already updated to the latest version</font> <font color=\"#8A0808\">v"..ScriptVersion.."</font>")
+					Messages("<font color=\"#848484\">Your script is already updated to the latest version</font> <font color=\"#8A0808\">v"..ScriptVersion.."</font>.")
 				end
 			end
 		else
-			Messages("<font color=\"#151515\">An error occured while checking version information.</font>")
+			Messages("<font color=\"#848484\">An error occured while checking version information</font>.")
 		end
 	end
 end
