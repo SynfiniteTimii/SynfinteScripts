@@ -1,3 +1,11 @@
+--Script Info--
+local Version = "0.01"
+local ScriptVersion = "0.01"
+local AutoUpdate = true
+local Author = "Timii"
+local LoadedText = "SynfiniteEzreal"
+local ServerData
+
  --         _____              __ _       _ _       ______                    _         --
  --        / ____|            / _(_)     (_) |     |  ____|                  | |        --
  --       | (___  _   _ _ __ | |_ _ _ __  _| |_ ___| |__   _____ __ ___  __ _| |        --
@@ -12,24 +20,15 @@
  --   |_| |_||_\___| |_| |_| \___/\__,_|_\__, \__,_|_| |___/_\_\ .__/_\___/_| \___|_|   --
  --                                      |___/                 |_|                      --
 
-
---Version--
-local Version = "0.01"
-local ScriptVersion = "0.01"
-local AutoUpdate = true
-local Author = "Timii"
-local LoadedText = "SynfiniteEzreal"
-local ServerData
-
 --Champion--
-if myHero.charName ~= "Ezreal" then return end
+--if myHero.charName ~= "Ezreal" then return end
 
 --Auto-Update: Thanks to QQQ--
 local UPDATE_FILE_PATH = SCRIPT_PATH.."SynfiniteEzreal - The Prodigal Explorer"
 local UPDATE_NAME = "SynfiniteEzreal - The Prodigal Explorer"
 local UPDATE_HOST = "raw.github.com"
 local UPDATE_PATH = "/SynfiniteTimii/SynfinteScripts/master/SynfiniteEzreal%20-%20The%20Prodigal%20Explorer.lua?chunk="..math.random(1, 1000)
-local UPDATE_FILE_PATH = SCRIPT_PATH.."SynfiniteEzreal - The Prodigal Explorer"
+local UPDATE_FILE_PATH = SCRIPT_PATH.."SynfiniteEzreal - The Prodigal Explorer.lua"
 local UPDATE_URL = "https://"..UPDATE_HOST..UPDATE_PATH
 
 --Message Display [AutoUpdate]--
