@@ -42,5 +42,15 @@ if _G.AutoUpdate then
 			ServerVersion = tonumber(ServerVersion)
 			if tonumber (_G.ScriptVersion) < ServerVersion then
 				Messages("<font color=\"#151515\"> Script is not updated. Current Version: </font> <font color=\"#8A0808\">".._G.ScriptVersion.."</font> <font color=\"#151515\">Latest Version: </font> <font color=\"#8A0808\">"..ServerVersion.."</font>.")
-
+				Messages("<font color=\"#151515\">Now Updating Script to </font><font color=\"#8A0808\">v."..ServerVersion.."</font><font color=\"#151515\">. Do not press [F9].</font>")
+				DelayAction(function() DownloadFile(UPDATE_URL, UPDATE_FILE_PATH, function ()
+				Messages("<font color=\"#151515\">Succesfully Updated </font><font color=\"#FFBF00\">".._G.LoadedText.."</font> <font color=\"#151515\"> to </font><font color=\"#8A0808\">v."..ServerVersion.."</font>.") end) end, 3)
+				Messages("<font color=\"#151515\">Please reload the script for changes to take effect.</font>")
+			else 
+				Messages("<font color=\"#151515\">Your script is already updated to the latest version</font> <font color=\"#8A0808\">v".._G.ScriptVersion.."</font>"
+			end
+		end
+	else
+		Messages("<font color=\"#151515\">An error occured while checking version information.</font>")
+	end
 end
