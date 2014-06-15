@@ -1,6 +1,6 @@
 --Script Info--
-local Version = "1.01"
-local ScriptVersion = "1.01"
+local Version = "0.01"
+local ScriptVersion = "0.01"
 local AutoUpdate = true
 local Author = "Timii"
 local LoadedText = "SynfiniteEzreal"
@@ -44,17 +44,17 @@ function AUpdate()
 			ServerVersion = string.match(ServerVersion and ServerVersion or "", "%d.%d%d")
 			if ServerVersion then
 				if ScriptVersion ~= ServerVersion then
-					Messages("<font color=\"#848484\"> Script is not updated. Current Version: </font> <font color=\"#8A0808\">"..ScriptVersion.."</font> <font color=\"#848484\">Latest Version: </font> <font color=\"#8A0808\">"..ServerVersion.."</font>.")
-					Messages("<font color=\"#151515\">Now Updating Script to </font><font color=\"#8A0808\">v."..ServerVersion.."</font><font color=\"#848484\">. Do not press [F9]</font>.")
+					Messages("<font color=\"#848484\"> Script is not updated. Current Version: </font> <font color=\"#8A0808\">"..ScriptVersion.."</font> <font color=\"#848484\">Latest Version: </font> <font color=\"#8A0808\">"..ServerVersion.."</font><font color=\"#848484\">.</font>")
+					Messages("<font color=\"#848484\">Now Updating Script to </font><font color=\"#8A0808\">v."..ServerVersion.."</font><font color=\"#848484\">. Do not press [F9].</font>")
 					DelayAction(function() DownloadFile(UPDATE_URL, UPDATE_FILE_PATH, function ()
-					Messages("<font color=\"#848484\">Succesfully Updated </font><font color=\"#FFBF00\">"..LoadedText.."</font> <font color=\"#848484\"> to </font><font color=\"#8A0808\">v."..ServerVersion.."</font>.") end) end, 3)
-					Messages("<font color=\"#848484\">Please reload the script for changes to take effect</font>.")
+					Messages("<font color=\"#848484\">Succesfully Updated </font><font color=\"#FFBF00\">"..LoadedText.."</font> <font color=\"#848484\"> to </font><font color=\"#8A0808\">v."..ServerVersion.."</font><font color=\"#848484\">.</font>") end) end, 3)
+					Messages("<font color=\"#848484\">Please reload the script for changes to take effect.</font>")
 				else 
-					Messages("<font color=\"#848484\">Your script is already updated to the latest version</font> <font color=\"#8A0808\">v"..ScriptVersion.."</font>.")
+					Messages("<font color=\"#848484\">Your script is already updated to the latest version</font> <font color=\"#8A0808\">v"..ScriptVersion.."</font><font color=\"#848484\">.</font>")
 				end
 			end
 		else
-			Messages("<font color=\"#848484\">An error occured while checking version information</font>.")
+			Messages("<font color=\"#848484\">An error occured while checking version information.</font>")
 		end
 	end
 end
@@ -63,4 +63,5 @@ end
 --OnLoad Function--
 function OnLoad()
 	AUpdate()
+	Message("<font color=\"#8A0808\">v"..ScriptVersion.."</font><font color=\"#848484\">successfully loaded.</font>")
 end
