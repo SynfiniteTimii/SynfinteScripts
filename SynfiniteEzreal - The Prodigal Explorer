@@ -35,29 +35,32 @@ function Messages(MSG)
 	print("<font color=\"#000000\">[</font><font color=\"#FFBF00\">"..LoadedText.."</font><font color=\"#000000\">]</font> "..MSG..) 
 end
 
-if _G.AutoUpdate then
-	local ServerData = GetWebResult (UPDATE_HOST, UPDATE_PATH)
-	if ServerData then
-		local ServerVersion = string.match(ServerData, "_G.ScriptVersion = \"%d+.%d+\"")
-		ServerVersion = string.match(ServerVersion and ServerVersion or "", "%d+.%d+")
-		if ServerVersion then
-			ServerVersion = tonumber(ServerVersion)
-			if tonumber (ScriptVersion) < ServerVersion then
-				Messages("<font color=\"#151515\"> Script is not updated. Current Version: </font> <font color=\"#8A0808\">"..ScriptVersion.."</font> <font color=\"#151515\">Latest Version: </font> <font color=\"#8A0808\">"..ServerVersion.."</font>.")
-				Messages("<font color=\"#151515\">Now Updating Script to </font><font color=\"#8A0808\">v."..ServerVersion.."</font><font color=\"#151515\">. Do not press [F9].</font>")
-				DelayAction(function() DownloadFile(UPDATE_URL, UPDATE_FILE_PATH, function ()
-				Messages("<font color=\"#151515\">Succesfully Updated </font><font color=\"#FFBF00\">"..LoadedText.."</font> <font color=\"#151515\"> to </font><font color=\"#8A0808\">v."..ServerVersion.."</font>.") end) end, 3)
-				Messages("<font color=\"#151515\">Please reload the script for changes to take effect.</font>")
-			else 
-				Messages("<font color=\"#151515\">Your script is already updated to the latest version</font> <font color=\"#8A0808\">v"..ScriptVersion.."</font>")
+function AUpdate()
+	if AutoUpdate then
+		local ServerData = GetWebResult (UPDATE_HOST, UPDATE_PATH)
+		if ServerData then
+			local ServerVersion = string.match(ServerData, "_G.ScriptVersion = \"%d+.%d+\"")
+			ServerVersion = string.match(ServerVersion and ServerVersion or "", "%d+.%d+")
+			if ServerVersion then
+				ServerVersion = tonumber(ServerVersion)
+				if tonumber (ScriptVersion) < ServerVersion then
+					Messages("<font color=\"#151515\"> Script is not updated. Current Version: </font> <font color=\"#8A0808\">"..ScriptVersion.."</font> <font color=\"#151515\">Latest Version: </font> <font color=\"#8A0808\">"..ServerVersion.."</font>.")
+					Messages("<font color=\"#151515\">Now Updating Script to </font><font color=\"#8A0808\">v."..ServerVersion.."</font><font color=\"#151515\">. Do not press [F9].</font>")
+					DelayAction(function() DownloadFile(UPDATE_URL, UPDATE_FILE_PATH, function ()
+					Messages("<font color=\"#151515\">Succesfully Updated </font><font color=\"#FFBF00\">"..LoadedText.."</font> <font color=\"#151515\"> to </font><font color=\"#8A0808\">v."..ServerVersion.."</font>.") end) end, 3)
+					Messages("<font color=\"#151515\">Please reload the script for changes to take effect.</font>")
+				else 
+					Messages("<font color=\"#151515\">Your script is already updated to the latest version</font> <font color=\"#8A0808\">v"..ScriptVersion.."</font>")
+				end
 			end
+		else
+			Messages("<font color=\"#151515\">An error occured while checking version information.</font>")
 		end
-	else
-		Messages("<font color=\"#151515\">An error occured while checking version information.</font>")
 	end
 end
+--End Auto Update--
 
 --OnLoad Function--
 function OnLoad()
-	
+	AUpdate()
 end
