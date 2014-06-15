@@ -18,7 +18,8 @@ local Version = "0.01"
 local ScriptVersion = "0.01"
 local AutoUpdate = true
 local Author = "Timii"
-local LoadedText = "SyfiniteEzreal"
+local LoadedText = "SynfiniteEzreal"
+local ServerData
 
 --Champion--
 if myHero.charName ~= "Ezreal" then return end
@@ -27,7 +28,8 @@ if myHero.charName ~= "Ezreal" then return end
 local UPDATE_FILE_PATH = SCRIPT_PATH.."SynfiniteEzreal - The Prodigal Explorer"
 local UPDATE_NAME = "SynfiniteEzreal - The Prodigal Explorer"
 local UPDATE_HOST = "raw.github.com"
-local UPDATE_PATH = "/SynfiniteTimii/SynfinteScripts/master/Scripts/SynfiniteEzreal%20-%20The%20Prodigal%20Explorer?chunk="..math.random(1, 1000)
+local UPDATE_PATH = "/SynfiniteTimii/SynfinteScripts/master/SynfiniteEzreal%20-%20The%20Prodigal%20Explorer.lua?chunk="..math.random(1, 1000)
+local UPDATE_FILE_PATH = SCRIPT_PATH.."SynfiniteEzreal - The Prodigal Explorer"
 local UPDATE_URL = "https://"..UPDATE_HOST..UPDATE_PATH
 
 --Message Display [AutoUpdate]--
@@ -37,14 +39,12 @@ end
 
 function AUpdate()
 	if AutoUpdate then
-		local ServerData = GetWebResult (UPDATE_HOST, UPDATE_PATH)
+		ServerData = GetWebResult(UPDATE_HOST, UPDATE_PATH)
 		if ServerData then
-			local ServerVersion = string.match(ServerData, "ScriptVersion = \"%d+.%d+\"")
-			ServerVersion = string.match(ServerVersion and ServerVersion or "", "%d+.%d+")
+			local ServerVersion = string.match(ServerData, "ScriptVersion = \"%d.%d%d\"")
+			ServerVersion = string.match(ServerVersion and ServerVersion or "", "%d.%d%d")
 			if ServerVersion then
-				ServerVersion = tonumber(ServerVersion)
-				print("see")
-				if tonumber (ScriptVersion) < ServerVersion then
+				if ScriptVersion ~= ServerVersion then
 					Messages("<font color=\"#151515\"> Script is not updated. Current Version: </font> <font color=\"#8A0808\">"..ScriptVersion.."</font> <font color=\"#151515\">Latest Version: </font> <font color=\"#8A0808\">"..ServerVersion.."</font>.")
 					Messages("<font color=\"#151515\">Now Updating Script to </font><font color=\"#8A0808\">v."..ServerVersion.."</font><font color=\"#151515\">. Do not press [F9].</font>")
 					DelayAction(function() DownloadFile(UPDATE_URL, UPDATE_FILE_PATH, function ()
