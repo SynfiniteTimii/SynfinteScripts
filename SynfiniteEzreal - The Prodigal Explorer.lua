@@ -63,5 +63,5 @@ end
 --OnLoad Function--
 function OnLoad()
 	AUpdate()
-	Message("<font color=\"#8A0808\">v"..ScriptVersion.."</font><font color=\"#848484\">successfully loaded.</font>")
+	print("<font color=\"#000000\">[</font><font color=\"#FFBF00\">"..LoadedText.."</font><font color=\"#000000\">]</font> <font color=\"#8A0808\">v"..ScriptVersion.."</font> <font color=\"#848484\">successfully loaded.</font>")
 end
