@@ -50,7 +50,7 @@ function AUpdate()
 					Messages("<font color=\"#848484\">Succesfully Updated </font><font color=\"#FFBF00\">"..LoadedText.."</font> <font color=\"#848484\"> to </font><font color=\"#8A0808\">v."..ServerVersion.."</font><font color=\"#848484\">.</font>") end) end, 3)
 					Messages("<font color=\"#848484\">Please reload the script for changes to take effect.</font>")
 				else 
-					Messages("<font color=\"#848484\">Your script is already updated to the latest version</font> <font color=\"#8A0808\">v"..ScriptVersion.."</font><font color=\"#848484\">.</font>")
+					Messages("<font color=\"#848484\">Your script is updated to the latest version</font> <font color=\"#8A0808\">v"..ScriptVersion.."</font><font color=\"#848484\">.</font>")
 				end
 			end
 		else
