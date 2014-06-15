@@ -135,8 +135,8 @@ function OnTick()
 	CheckCD()
 	
 	--Farming Function--
-	if Menu.Farming.LaneFarm then Farming() end
-	if Menu.Drawings.AutoE then AutoE() end
+	if Menu.Hotkeys.LaneFarm then Farming() end
+	if Menu.QuickCast.AutoE then AutoE() end
 	
 end
 
@@ -154,17 +154,17 @@ function OnDraw()
 			--Check Q--
 			if Menu.Drawings.DrawQ then
 				if QR then 
-					DrawCircle3D(myHero.x, myHero.y, myHero.z, Skills.skillQ.range, 1, RGB(17,240,61)) 
+					DrawCircle3D(myHero.x, myHero.y, myHero.z, Skills.skillQ.range - 60, 1, RGB(17,240,61)) 
 				else 
-					DrawCircle3D(myHero.x, myHero.y, myHero.z, Skills.skillQ.range, 1, RGB(247,17,40))
+					DrawCircle3D(myHero.x, myHero.y, myHero.z, Skills.skillQ.range - 60, 1, RGB(247,17,40))
 				end
 			end
 			--Check W--
 			if Menu.Drawings.DrawW then
 				if WR then
-					DrawCircle3D(myHero.x, myHero.y, myHero.z, Skills.skillW.range, 1, RGB(17,240,61))
+					DrawCircle3D(myHero.x, myHero.y, myHero.z, Skills.skillW.range - 60, 1, RGB(17,240,61))
 				else
-					DrawCircle3D(myHero.x, myHero.y, myHero.z, Skills.skillW.range, 1, RGB(247,17,40))
+					DrawCircle3D(myHero.x, myHero.y, myHero.z, Skills.skillW.range - 60, 1, RGB(247,17,40))
 				end
 			end
 		end
@@ -176,17 +176,17 @@ function OnDraw()
 		--Check Q--
 		if Menu.Drawings.DrawQ then
 			if QR then 
-				DrawCircle(myHero.x, myHero.y, myHero.z, Skills.skillQ.range, ARGB(94,17,240,61)) 
+				DrawCircle(myHero.x, myHero.y, myHero.z, Skills.skillQ.range + 25, ARGB(94,17,240,61)) 
 			else
-				DrawCircle(myHero.x, myHero.y, myHero.z, Skills.skillQ.range, ARGB(97,247,17,40))
+				DrawCircle(myHero.x, myHero.y, myHero.z, Skills.skillQ.range + 25, ARGB(97,247,17,40))
 			end
 		end
 		--Check W--
 		if Menu.Drawings.DrawW then
 			if WR then
-				DrawCircle(myHero.x, myHero.y, myHero.z, Skills.skillW.range, ARGB(94,17,240,61))
+				DrawCircle(myHero.x, myHero.y, myHero.z, Skills.skillW.range + 25, ARGB(94,17,240,61))
 			else
-				DrawCircle(myHero.x, myHero.y, myHero.z, Skills.skillW.range, ARGB(97,247,17,40))
+				DrawCircle(myHero.x, myHero.y, myHero.z, Skills.skillW.range + 25, ARGB(97,247,17,40))
 			end
 		end
 	end
@@ -234,16 +234,23 @@ function AddMenu()
 	
 	--Sub Menus--
 	Menu:addSubMenu("[SynfiniteEzreal] Drawing Settings", "Drawings")
-	Menu:addSubMenu("[SynfiniteEzreal] Farming Settings", "Farming")
+	Menu:addSubMenu("[SynfiniteEzreal] Hotkeys Settings", "Hotkeys")
+	Menu:addSubMenu("[SynfiniteEzreal] QuickCast Settings", "QuickCast")
+	Menu:addSubMenu("[SynfiniteEzreal] Harass Settings", "Harass")
 	
 	--Drawing Menu--
 	Menu.Drawings:addParam("DrawA", "   [A] Auto Attack Range", SCRIPT_PARAM_ONOFF, true)
 	Menu.Drawings:addParam("DrawQ", "   [Q] Mystic Shot Range", SCRIPT_PARAM_ONOFF, true)
 	Menu.Drawings:addParam("DrawW", "   [W] Essence Flux Range", SCRIPT_PARAM_ONOFF, true)
-	Menu.Drawings:addParam("AutoE", "   [E] Quick Cast Arcane Shift", SCRIPT_PARAM_ONKEYDOWN, false,GetKey("E"))
 	Menu.Drawings:addParam("NoLagToggle", "   [Draw Lag-Free Circles]", SCRIPT_PARAM_ONOFF, false)
 	
-	--Farming Menu--
-	Menu.Farming:addParam("LaneFarm", "   Set Farming Key", SCRIPT_PARAM_ONKEYDOWN, false, GetKey("C"))
+	--Hotkeys Menu--
+	Menu.Hotkeys:addParam("LaneFarm", "   Set Farming Key", SCRIPT_PARAM_ONKEYDOWN, false, GetKey("X"))
+	
+	--QuickCast Menu--
+	Menu.QuickCast:addParam("AutoE", "   [QC] Arcane Shift", SCRIPT_PARAM_ONKEYDOWN, false,GetKey("E"))
+	
+	--Harass Menu--
+	Menu.Harass:addParam("Harass", "   Set Harass Key", SCRIPT_PARAM_ONKEYDOWN, false,GetKey("C"))
 	
 end
