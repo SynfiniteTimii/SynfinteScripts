@@ -14,8 +14,8 @@
 
 
 --Version--
-local Version = "0.1"
-_G.ScriptVersion = "0.1"
+local Version = "0.2"
+_G.ScriptVersion = "0.2"
 _G.AutoUpdate = true
 _G.Author = "Timii"
 _G.LoadedText = "SyfiniteEzreal"
