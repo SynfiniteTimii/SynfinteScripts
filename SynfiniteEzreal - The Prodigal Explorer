@@ -31,7 +31,7 @@ local UPDATE_PATH = "/SynfiniteTimii/SynfinteScripts/master/Scripts/SynfiniteEzr
 local UPDATE_URL = "https://"..UPDATE_HOST..UPDATE_PATH
 
 --Message Display [AutoUpdate]--
-function Messages(MSG) print("<font color=\"#000000\">[</font><font color=\"#FFBF00\">".._G.LoadedText.."</font><font color=\"#000000\">]</font> "..MSG..) end
+function Messages(MSG) print("<font color=\"#000000\">[</font><font color=\"#FFBF00\">".._G.LoadedText.."</font><font color=\"#000000\">]</font> "..MSG) end
 
 if _G.AutoUpdate then
 	local ServerData = GetWebResult (UPDATE_HOST, UPDATE_PATH)
@@ -47,7 +47,7 @@ if _G.AutoUpdate then
 				Messages("<font color=\"#151515\">Succesfully Updated </font><font color=\"#FFBF00\">".._G.LoadedText.."</font> <font color=\"#151515\"> to </font><font color=\"#8A0808\">v."..ServerVersion.."</font>.") end) end, 3)
 				Messages("<font color=\"#151515\">Please reload the script for changes to take effect.</font>")
 			else 
-				Messages("<font color=\"#151515\">Your script is already updated to the latest version</font> <font color=\"#8A0808\">v".._G.ScriptVersion.."</font>"
+				Messages("<font color=\"#151515\">Your script is already updated to the latest version</font> <font color=\"#8A0808\">v".._G.ScriptVersion.."</font>")
 			end
 		end
 	else
