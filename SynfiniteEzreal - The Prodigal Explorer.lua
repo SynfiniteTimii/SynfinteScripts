@@ -60,8 +60,54 @@ function AUpdate()
 end
 --End Auto Update--
 
---Check for Required Libraries--
---To be added--
+--Check for Required Libraries: Thanks to QQQ--
+local VIP_LIBS = {
+	["VPrediction"] = "https://raw.github.com/Hellsing/BoL/master/common/VPrediction.lua"
+}
+local NORMAL_LIBS = {
+	["AoE_Skillshot_Position"] = "https://raw.github.com/SynfiniteTimii/SynfinteScripts/master/Common/AoE_Skillshot_Position.lua"
+}
+local DOWNLOADING_LIBS = false
+local DOWNLOAD_COUNT = 0
+
+--Checks if they are downloaded using DOWNLOAD_COUNT--
+function AfterDownload()
+	DOWNLOAD_COUNT = DOWNLOAD_COUNT - 1
+	if DOWNLOAD_COUNT == 0 then
+		DOWNLOADING_LIBS = false
+		print("<font color=\"#000000\">[</font><font color=\"#FFBF00\">"..LoadedText.."</font><font color=\"#000000\">]</font> <font color=\"#848484\">All required libraries are now downloaded. Please reload for changes to take effect.</font>")
+	end
+end
+
+if VIP_USER then
+	for DOWNLOAD_LIB_NAME, DOWNLOAD_LIB_URL in pairs(VIP_LIBS) do
+		if FileExist(LIB_PATH .. DOWNLOAD_LIB_NAME .. ".lua") then
+			require(DOWNLOAD_LIB_NAME)
+		else
+			DOWNLOADING_LIBS = true
+			DOWNLOAD_COUNT = DOWNLOAD_COUNT + 1
+
+			print("<font color=\"#000000\">[</font><font color=\"#FFBF00\">"..LoadedText.."</font><font color=\"#000000\">]</font> <font color=\"#848484\">Not all required libraries are installed. Downloading "..DOWNLOAD_LIB_NAME..".</font>")
+			DownloadFile(DOWNLOAD_LIB_URL, LIB_PATH .. DOWNLOAD_LIB_NAME..".lua", AfterDownload)
+		end
+	end
+	if DOWNLOADING_LIBS then return end
+else
+	for DOWNLOAD_LIB_NAME, DOWNLOAD_LIB_URL in pairs(NORMAL_LIBS) do
+		if FileExist(LIB_PATH .. DOWNLOAD_LIB_NAME .. ".lua") then
+			require(DOWNLOAD_LIB_NAME)
+		else
+			DOWNLOADING_LIBS = true
+			DOWNLOAD_COUNT = DOWNLOAD_COUNT + 1
+
+			print("<font color=\"#000000\">[</font><font color=\"#FFBF00\">"..LoadedText.."</font><font color=\"#000000\">]</font> <font color=\"#848484\">Not all required libraries are installed. Downloading "..DOWNLOAD_LIB_NAME..".</font>")
+			DownloadFile(DOWNLOAD_LIB_URL, LIB_PATH .. DOWNLOAD_LIB_NAME..".lua", AfterDownload)
+		end
+	end
+	if DOWNLOADING_LIBS then return end
+end
+
+
 --End Check Req. Libs--
 
 --Spells--
