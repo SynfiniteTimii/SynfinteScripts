@@ -31,7 +31,9 @@ local UPDATE_PATH = "/SynfiniteTimii/SynfinteScripts/master/Scripts/SynfiniteEzr
 local UPDATE_URL = "https://"..UPDATE_HOST..UPDATE_PATH
 
 --Message Display [AutoUpdate]--
-function Messages(MSG) print("<font color=\"#000000\">[</font><font color=\"#FFBF00\">".._G.LoadedText.."</font><font color=\"#000000\">]</font> "..MSG) end
+function Messages(MSG) 
+	PrintChat("<font color=\"#000000\">[</font><font color=\"#FFBF00\">".._G.LoadedText.."</font><font color=\"#000000\">]</font> "..MSG) 
+end
 
 if _G.AutoUpdate then
 	local ServerData = GetWebResult (UPDATE_HOST, UPDATE_PATH)
@@ -53,4 +55,9 @@ if _G.AutoUpdate then
 	else
 		Messages("<font color=\"#151515\">An error occured while checking version information.</font>")
 	end
+end
+
+--OnLoad Function--
+function OnLoad()
+	
 end
