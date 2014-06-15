@@ -60,6 +60,17 @@ function AUpdate()
 end
 --End Auto Update--
 
+--Check for Required Libraries--
+--To be added--
+--End Check Req. Libs--
+
+--Spells--
+local Skills = {
+	skillQ = {spellName = "Mystic Shot", range = 1200, speed = 2000, delay = .250, width = 60},
+  skillW = {spellName = "Essence Flux", range = 1050, speed = 1600, delay = .250, width = 80},
+  skillR = {spellName = "Trueshot Barrage", range = 2000, speed = 2000, delay = 1.0, width = 160},
+}
+
 --OnLoad Function--
 function OnLoad()
 	AUpdate()
