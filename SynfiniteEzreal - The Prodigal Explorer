@@ -14,11 +14,11 @@
 
 
 --Version--
-local Version = "0.2"
-_G.ScriptVersion = "0.2"
-_G.AutoUpdate = true
-_G.Author = "Timii"
-_G.LoadedText = "SyfiniteEzreal"
+local Version = "0.1"
+local ScriptVersion = "0.1"
+local AutoUpdate = true
+local Author = "Timii"
+local LoadedText = "SyfiniteEzreal"
 
 --Champion--
 if myHero.charName ~= "Ezreal" then return end
@@ -32,7 +32,7 @@ local UPDATE_URL = "https://"..UPDATE_HOST..UPDATE_PATH
 
 --Message Display [AutoUpdate]--
 function Messages(MSG) 
-	PrintChat("<font color=\"#000000\">[</font><font color=\"#FFBF00\">".._G.LoadedText.."</font><font color=\"#000000\">]</font> "..MSG) 
+	print("<font color=\"#000000\">[</font><font color=\"#FFBF00\">"..LoadedText.."</font><font color=\"#000000\">]</font> "..MSG..) 
 end
 
 if _G.AutoUpdate then
@@ -42,14 +42,14 @@ if _G.AutoUpdate then
 		ServerVersion = string.match(ServerVersion and ServerVersion or "", "%d+.%d+")
 		if ServerVersion then
 			ServerVersion = tonumber(ServerVersion)
-			if tonumber (_G.ScriptVersion) < ServerVersion then
-				Messages("<font color=\"#151515\"> Script is not updated. Current Version: </font> <font color=\"#8A0808\">".._G.ScriptVersion.."</font> <font color=\"#151515\">Latest Version: </font> <font color=\"#8A0808\">"..ServerVersion.."</font>.")
+			if tonumber (ScriptVersion) < ServerVersion then
+				Messages("<font color=\"#151515\"> Script is not updated. Current Version: </font> <font color=\"#8A0808\">"..ScriptVersion.."</font> <font color=\"#151515\">Latest Version: </font> <font color=\"#8A0808\">"..ServerVersion.."</font>.")
 				Messages("<font color=\"#151515\">Now Updating Script to </font><font color=\"#8A0808\">v."..ServerVersion.."</font><font color=\"#151515\">. Do not press [F9].</font>")
 				DelayAction(function() DownloadFile(UPDATE_URL, UPDATE_FILE_PATH, function ()
-				Messages("<font color=\"#151515\">Succesfully Updated </font><font color=\"#FFBF00\">".._G.LoadedText.."</font> <font color=\"#151515\"> to </font><font color=\"#8A0808\">v."..ServerVersion.."</font>.") end) end, 3)
+				Messages("<font color=\"#151515\">Succesfully Updated </font><font color=\"#FFBF00\">"..LoadedText.."</font> <font color=\"#151515\"> to </font><font color=\"#8A0808\">v."..ServerVersion.."</font>.") end) end, 3)
 				Messages("<font color=\"#151515\">Please reload the script for changes to take effect.</font>")
 			else 
-				Messages("<font color=\"#151515\">Your script is already updated to the latest version</font> <font color=\"#8A0808\">v".._G.ScriptVersion.."</font>")
+				Messages("<font color=\"#151515\">Your script is already updated to the latest version</font> <font color=\"#8A0808\">v"..ScriptVersion.."</font>")
 			end
 		end
 	else
