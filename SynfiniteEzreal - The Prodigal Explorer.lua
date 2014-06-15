@@ -1,6 +1,6 @@
 --Script Info--
-local Version = "0.02"
-local ScriptVersion = "0.02"
+local Version = "0.01"
+local ScriptVersion = "0.01"
 local AutoUpdate = true
 local Author = "Timii"
 local LoadedText = "SynfiniteEzreal"
