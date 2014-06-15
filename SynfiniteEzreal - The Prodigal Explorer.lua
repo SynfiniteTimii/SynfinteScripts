@@ -62,10 +62,12 @@ end
 
 --Check for Required Libraries: Thanks to QQQ--
 local VIP_LIBS = {
-	["VPrediction"] = "https://raw.github.com/Hellsing/BoL/master/common/VPrediction.lua"
+	["VPrediction"] = "https://raw.github.com/Hellsing/BoL/master/common/VPrediction.lua",
+	["SOW"] = "https://raw.github.com/Hellsing/BoL/master/common/SOW.lua"
 }
 local NORMAL_LIBS = {
-	["AoE_Skillshot_Position"] = "https://raw.github.com/SynfiniteTimii/SynfinteScripts/master/Common/AoE_Skillshot_Position.lua"
+	["AoE_Skillshot_Position"] = "https://raw.github.com/SynfiniteTimii/SynfinteScripts/master/Common/AoE_Skillshot_Position.lua",
+	["SOW"] = "https://raw.github.com/Hellsing/BoL/master/common/SOW.lua"
 }
 local DOWNLOADING_LIBS = false
 local DOWNLOAD_COUNT = 0
@@ -106,8 +108,6 @@ else
 	end
 	if DOWNLOADING_LIBS then return end
 end
-
-
 --End Check Req. Libs--
 
 --Spells--
@@ -116,9 +116,134 @@ local Skills = {
   skillW = {spellName = "Essence Flux", range = 1050, speed = 1600, delay = .250, width = 80},
   skillR = {spellName = "Trueshot Barrage", range = 2000, speed = 2000, delay = 1.0, width = 160},
 }
+local QR, WR, ER, RR
+local EnemyMinions
+local VPred = nil
 
 --OnLoad Function--
 function OnLoad()
+	VPred = VPrediction()
+	theSOW = SOW(VPred)
 	AUpdate()
+	AddMenu()
+	
 	print("<font color=\"#000000\">[</font><font color=\"#FFBF00\">"..LoadedText.."</font><font color=\"#000000\">]</font> <font color=\"#8A0808\">v"..ScriptVersion.."</font> <font color=\"#848484\">successfully loaded.</font>")
+end
+
+--OnTick Function [Runs every tick]--
+function OnTick()
+	CheckCD()
+	
+	--Farming Function--
+	if Menu.Farming.LaneFarm then Farming() end
+	if Menu.Drawings.AutoE then AutoE() end
+	
+end
+
+--OnDraw Function--
+function OnDraw()
+
+	--Lag Free Circles--
+	if Menu.Drawings.NoLagToggle then
+		local draw = WorldToScreen(D3DXVECTOR3(myHero.x, myHero.y, myHero.z))
+		if OnScreen(draw.x, draw.y) then
+			--Check AutoAttack--
+			if Menu.Drawings.DrawA then
+				DrawCircle3D(myHero.x, myHero.y, myHero.z, myHero.range + 25, 1, RGB(0,0,0)) 
+			end
+			--Check Q--
+			if Menu.Drawings.DrawQ then
+				if QR then 
+					DrawCircle3D(myHero.x, myHero.y, myHero.z, Skills.skillQ.range, 1, RGB(17,240,61)) 
+				else 
+					DrawCircle3D(myHero.x, myHero.y, myHero.z, Skills.skillQ.range, 1, RGB(247,17,40))
+				end
+			end
+			--Check W--
+			if Menu.Drawings.DrawW then
+				if WR then
+					DrawCircle3D(myHero.x, myHero.y, myHero.z, Skills.skillW.range, 1, RGB(17,240,61))
+				else
+					DrawCircle3D(myHero.x, myHero.y, myHero.z, Skills.skillW.range, 1, RGB(247,17,40))
+				end
+			end
+		end
+	--Full Circles--
+	else
+		if Menu.Drawings.DrawA then
+				DrawCircle(myHero.x, myHero.y, myHero.z, myHero.range + 25, ARGB(20,20,20,20)) 
+		end
+		--Check Q--
+		if Menu.Drawings.DrawQ then
+			if QR then 
+				DrawCircle(myHero.x, myHero.y, myHero.z, Skills.skillQ.range, ARGB(94,17,240,61)) 
+			else
+				DrawCircle(myHero.x, myHero.y, myHero.z, Skills.skillQ.range, ARGB(97,247,17,40))
+			end
+		end
+		--Check W--
+		if Menu.Drawings.DrawW then
+			if WR then
+				DrawCircle(myHero.x, myHero.y, myHero.z, Skills.skillW.range, ARGB(94,17,240,61))
+			else
+				DrawCircle(myHero.x, myHero.y, myHero.z, Skills.skillW.range, ARGB(97,247,17,40))
+			end
+		end
+	end
+end
+
+--Check Cooldown--
+function CheckCD()
+	QR = (myHero:CanUseSpell(_Q) == READY)
+	WR = (myHero:CanUseSpell(_W) == READY)
+	ER = (myHero:CanUseSpell(_E) == READY)
+	RR = (myHero:CanUseSpell(_R) == READY)
+end
+
+--CS Mode--
+function Farming()
+	theSOW:Farm(1, mousePos)
+end
+
+--Item Damage Bonus--
+function ItemDamage()
+	local BonusDamage = 0
+	--Sheen--
+	if GetInventoryHaveItem(3057) then
+		BonusDamage = getDmg("Sheen", Target, myHero)
+	--Trinity Force--
+	elseif GetInventoryHaveItem(3078) then
+		BonusDamage = getDmg("Trinity Force", Target, myHero)
+	end
+	
+	return BonusDamage
+end
+
+--AutoE--
+function AutoE()
+	if ER then
+		CastSpell(_E, mousePos.x, mousePos.z)
+	end
+end
+
+--Construct Settings Menu--
+function AddMenu()
+
+	--Main Directory
+	Menu = scriptConfig("SynfiniteEzreal [v"..Version.."]", "SynfiniteEzreal")
+	
+	--Sub Menus--
+	Menu:addSubMenu("[SynfiniteEzreal] Drawing Settings", "Drawings")
+	Menu:addSubMenu("[SynfiniteEzreal] Farming Settings", "Farming")
+	
+	--Drawing Menu--
+	Menu.Drawings:addParam("DrawA", "   [A] Auto Attack Range", SCRIPT_PARAM_ONOFF, true)
+	Menu.Drawings:addParam("DrawQ", "   [Q] Mystic Shot Range", SCRIPT_PARAM_ONOFF, true)
+	Menu.Drawings:addParam("DrawW", "   [W] Essence Flux Range", SCRIPT_PARAM_ONOFF, true)
+	Menu.Drawings:addParam("AutoE", "   [E] Quick Cast Arcane Shift", SCRIPT_PARAM_ONKEYDOWN, false,GetKey("E"))
+	Menu.Drawings:addParam("NoLagToggle", "   [Draw Lag-Free Circles]", SCRIPT_PARAM_ONOFF, false)
+	
+	--Farming Menu--
+	Menu.Farming:addParam("LaneFarm", "   Set Farming Key", SCRIPT_PARAM_ONKEYDOWN, false, GetKey("C"))
+	
 end
