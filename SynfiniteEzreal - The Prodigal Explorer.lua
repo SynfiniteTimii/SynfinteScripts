@@ -117,17 +117,21 @@ local Skills = {
   skillW = {spellName = "Essence Flux", range = 1050, speed = 1600, delay = .250, width = 80},
   skillR = {spellName = "Trueshot Barrage", range = 2000, speed = 2000, delay = 1.0, width = 160},
 }
-local QR, WR, ER, RR
+local IR, QR, WR, ER, RR
 local VPred = nil
 --Target Selection Variables--
 local targetSelect
 targetSelect = TargetSelector(TARGET_LESS_CAST_PRIORITY, Skills.skillR.range, DAMAGE_PHYSICAL, true)
 targetSelect.name = "[SE] Select Target"
 local Target = nil
+--Damage Calc Variables--
+local IgniteD = 0
+local UltD = 0
 
 --OnLoad Function--
 function OnLoad()
 	AUpdate()
+	CheckI()
 	if VIP_USER then
     VPred = VPrediction()
 		theSOW = SOW(VPred)
@@ -145,14 +149,25 @@ end
 function OnTick()
 	if myHero.dead then return end
 	CheckCD()
+	CalculateDMG()
 	Target = GetCustomTarget()
 	theSOW:ForceTarget(Target)
-	AutoIgnite()
 	
+	--Hotkey Toggles--
 	if Menu.Hotkeys.LaneFarm then Farming() end
 	if Menu.QuickCast.AutoE then AutoE() end
 	if Menu.Orbwalk.Mode1 then Harass() end
+	if Menu.Orbwalk.Mode0 then SBTWCombo() end
+	if Menu.QuickCast.AutoR then AutoR() end
 	
+	--If Target: Thanks QQQ--
+	if Target then
+		--Ignite--
+		if Menu.QuickCast.AutoI then
+			local IgniteD = 50 + (20 * myHero.level)
+			AutoIgnite(Target, IgniteD)
+		end
+	end
 end
 
 --OnDraw Function--
@@ -210,6 +225,7 @@ end
 
 --Check Cooldown--
 function CheckCD()
+	IR = (SIgnite ~= nil and myHero:CanUseSpell(SIgnite) == READY)
 	QR = (myHero:CanUseSpell(_Q) == READY)
 	WR = (myHero:CanUseSpell(_W) == READY)
 	ER = (myHero:CanUseSpell(_E) == READY)
@@ -248,6 +264,32 @@ function Harass()
 	--If W Enabled--
 	if ValidTarget(Target, Skills.skillW.range, true) and WR then
 		if Menu.Harass.HarassW then
+			WCast(Target)
+		end
+	end
+end
+
+--Auto Ultimate [WIP]--
+function AutoR()
+	if ValidTarget(Target, Skills.skillR.range, true) and RR then
+		UltD = ((getDmg("R", Target, myHero)) or 0)	
+			if Target.health < UltD *0.8 then
+				RCast(Target)
+			end
+	end	
+end
+
+--SBTW Combo [WIP]--
+function SBTWCombo()
+	--If Q Enabled--
+	if ValidTarget(Target, Skills.skillQ.range, true) and QR then
+		if Menu.SBTWCombo.ComboQ then
+			QCast(Target)
+		end
+	end
+	--If W Enabled--
+	if ValidTarget(Target, Skills.skillW.range, true) and WR then
+		if Menu.SBTWCombo.ComboW then
 			WCast(Target)
 		end
 	end
@@ -299,8 +341,43 @@ function WCast (Target)
   end
 end
 
+--R Cast--
+function RCast (Target)
+	if VIP_USER then
+    local RPosition, RHitChance = VPred:GetLineCastPosition(Target, Skills.skillR.delay, Skills.skillR.width, Skills.skillR.range, Skills.skillR.speed, myHero, false)
+
+    if RPosition ~= nil and GetDistance(RPosition) < Skills.skillR.range and myHero:CanUseSpell(_R) == READY and RHitChance >= 2 then
+      CastSpell(_R, RPosition.x, RPosition.z)
+    end
+  else
+    local RPosition = RPrediction:GetPrediction(Target)
+
+    if RPosition ~= nil and GetDistance(RPosition) < Skills.skillR.range and myHero:CanUseSpell(_R) == READY then
+      CastSpell(_R, RPosition.x, RPosition.z)
+    end
+  end
+end
+
 --Auto Ignite--
-function AutoIgnite()
+function AutoIgnite(Targ, IgniteDam)
+	if GetDistance(Targ) <= 600 and Targ.health < IgniteDam and SIgnite ~= nil then
+		if IR then 
+			CastSpell(SIgnite, Targ) 
+		end
+	end
+end
+
+--Check If Ignite--
+function CheckI()
+	if myHero:GetSpellData(SUMMONER_1).name:find("SummonerDot") then
+			SIgnite = SUMMONER_1
+	elseif myHero:GetSpellData(SUMMONER_2).name:find("SummonerDot") then
+			SIgnite = SUMMONER_2
+	end
+end
+
+--Damage Calculation & Display--
+function CalculateDMG()
 	
 end
 
@@ -315,6 +392,7 @@ function AddMenu()
 	Menu:addSubMenu("[SynfiniteEzreal] Hotkeys Settings", "Hotkeys")
 	Menu:addSubMenu("[SynfiniteEzreal] QuickCast Settings", "QuickCast")
 	Menu:addSubMenu("[SynfiniteEzreal] Harass Settings", "Harass")
+	Menu:addSubMenu("[SynfiniteEzreal] SBTWCombo Settings", "SBTWCombo")
 	Menu:addSubMenu("[SynfiniteEzreal] Orbwalk Settings", "Orbwalk")
 	-- SOW-Orbwalking --
 	theSOW:LoadToMenu(Menu.Orbwalk)
@@ -327,10 +405,16 @@ function AddMenu()
 	
 	--QuickCast Menu--
 	Menu.QuickCast:addParam("AutoE", "   [QC] Arcane Shift", SCRIPT_PARAM_ONKEYDOWN, false,GetKey("E"))
+	Menu.QuickCast:addParam("AutoI", "   [QC] Ignite Killables", SCRIPT_PARAM_ONOFF, true)
+	Menu.QuickCast:addParam("AutoR", "   [QC] Auto Ult Killables", SCRIPT_PARAM_ONOFF, true)
 	
 	--Harass Menu--
 	Menu.Harass:addParam("HarassQ", "   [Q] Use Mystic Shot", SCRIPT_PARAM_ONOFF, true)
 	Menu.Harass:addParam("HarassW", "   [W] Use Essence Flux", SCRIPT_PARAM_ONOFF, false)
+	
+	--SBTWCombo Menu--
+	Menu.SBTWCombo:addParam("ComboQ", "   [Q] Use Mystic Shot", SCRIPT_PARAM_ONOFF, true)
+	Menu.SBTWCombo:addParam("ComboW", "   [W] Use Essence Flux", SCRIPT_PARAM_ONOFF, true)
 	
 	--Target Selector--
 	Menu:addTS(targetSelect)
