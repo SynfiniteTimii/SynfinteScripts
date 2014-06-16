@@ -21,7 +21,7 @@ local ServerData
  --                                      |___/                 |_|                      --
 
 --Champion--
---if myHero.charName ~= "Ezreal" then return end
+if myHero.charName ~= "Ezreal" then return end
 
 --Auto-Update: Thanks to QQQ--
 local UPDATE_FILE_PATH = SCRIPT_PATH.."SynfiniteEzreal - The Prodigal Explorer"
@@ -110,6 +110,7 @@ else
 end
 --End Check Req. Libs--
 
+--Variables--
 --Spells--
 local Skills = {
 	skillQ = {spellName = "Mystic Shot", range = 1200, speed = 2000, delay = .250, width = 60},
@@ -117,14 +118,24 @@ local Skills = {
   skillR = {spellName = "Trueshot Barrage", range = 2000, speed = 2000, delay = 1.0, width = 160},
 }
 local QR, WR, ER, RR
-local EnemyMinions
 local VPred = nil
+--Target Selection Variables--
+local targetSelect
+targetSelect = TargetSelector(TARGET_LESS_CAST_PRIORITY, Skills.skillR.range, DAMAGE_PHYSICAL, true)
+targetSelect.name = "[SE] Select Target"
+local Target = nil
 
 --OnLoad Function--
 function OnLoad()
-	VPred = VPrediction()
-	theSOW = SOW(VPred)
 	AUpdate()
+	if VIP_USER then
+    VPred = VPrediction()
+		theSOW = SOW(VPred)
+  else
+		PredQ = TargetPrediction(Skills.skillQ.range, Skills.skillQ.speed / 1000, Skills.skillQ.delay * 1000, Skills.skillQ.width)
+		PredW = TargetPrediction(Skills.skillW.range, Skills.skillW.speed / 1000, Skills.skillW.delay * 1000, Skills.skillW.width)
+		PredR = TargetPrediction(Skills.skillR.range, Skills.skillR.speed / 1000, Skills.skillR.delay * 1000, Skills.skillR.width)
+  end
 	AddMenu()
 	
 	print("<font color=\"#000000\">[</font><font color=\"#FFBF00\">"..LoadedText.."</font><font color=\"#000000\">]</font> <font color=\"#8A0808\">v"..ScriptVersion.."</font> <font color=\"#848484\">successfully loaded.</font>")
@@ -132,17 +143,22 @@ end
 
 --OnTick Function [Runs every tick]--
 function OnTick()
+	if myHero.dead then return end
 	CheckCD()
+	Target = GetCustomTarget()
+	theSOW:ForceTarget(Target)
+	AutoIgnite()
 	
-	--Farming Function--
 	if Menu.Hotkeys.LaneFarm then Farming() end
 	if Menu.QuickCast.AutoE then AutoE() end
+	if Menu.Orbwalk.Mode1 then Harass() end
 	
 end
 
 --OnDraw Function--
 function OnDraw()
 
+	if myHero.dead then return end
 	--Lag Free Circles--
 	if Menu.Drawings.NoLagToggle then
 		local draw = WorldToScreen(D3DXVECTOR3(myHero.x, myHero.y, myHero.z))
@@ -171,7 +187,7 @@ function OnDraw()
 	--Full Circles--
 	else
 		if Menu.Drawings.DrawA then
-				DrawCircle(myHero.x, myHero.y, myHero.z, myHero.range + 25, ARGB(20,20,20,20)) 
+				DrawCircle(myHero.x, myHero.y, myHero.z, myHero.range + 65, ARGB(20,20,20,20)) 
 		end
 		--Check Q--
 		if Menu.Drawings.DrawQ then
@@ -200,11 +216,6 @@ function CheckCD()
 	RR = (myHero:CanUseSpell(_R) == READY)
 end
 
---CS Mode--
-function Farming()
-	theSOW:Farm(1, mousePos)
-end
-
 --Item Damage Bonus--
 function ItemDamage()
 	local BonusDamage = 0
@@ -226,6 +237,73 @@ function AutoE()
 	end
 end
 
+--Harass Settings--
+function Harass()
+	--If Q Enabled--
+	if ValidTarget(Target, Skills.skillQ.range, true) and QR then
+		if Menu.Harass.HarassQ then
+			QCast(Target)
+		end
+	end
+	--If W Enabled--
+	if ValidTarget(Target, Skills.skillW.range, true) and WR then
+		if Menu.Harass.HarassW then
+			WCast(Target)
+		end
+	end
+end
+
+--Get Targets--
+function GetCustomTarget()
+	targetSelect:update()
+    if _G.MMA_Target and _G.MMA_Target.type == myHero.type
+		then return _G.MMA_Target
+   	elseif _G.AutoCarry and _G.AutoCarry.Crosshair and _G.AutoCarry.Attack_Crosshair
+		then return _G.AutoCarry.Attack_Crosshair.target
+   	elseif targetSelect.target and not targetSelect.target.dead and targetSelect.target.type  == "obj_AI_Hero"
+		then return targetSelect.target
+    else
+    	return nil
+    end
+end
+
+--Q Cast--
+function QCast (Target)
+	if VIP_USER then
+    local QPosition, QHitChance = VPred:GetLineCastPosition(Target, Skills.skillQ.delay, Skills.skillQ.width, Skills.skillQ.range, Skills.skillQ.speed, myHero, true)
+    if QPosition ~= nil and myHero:CanUseSpell(_Q) == READY and GetDistance(QPosition) < Skills.skillQ.range and QHitChance >= 2 then
+      CastSpell(_Q, QPosition.x, QPosition.z)
+		end
+  else
+    local QPosition = PredQ:GetPrediction(Target)
+
+    if QPosition ~= nil and GetDistance(QPosition) < Skills.skillQ.range and myHero:CanUseSpell(_Q) == READY and not GetMinionCollision(myHero, QPosition, Skills.skillQ.width) then
+      CastSpell(_Q, QPosition.x, QPosition.z)
+    end
+  end
+end
+
+--W Cast--
+function WCast (Target)
+	if VIP_USER then
+    local WPosition, WHitChance = VPred:GetLineCastPosition(Target, Skills.skillW.delay, Skills.skillW.width, Skills.skillW.range, Skills.skillW.speed, myHero, true)
+    if WPosition ~= nil and myHero:CanUseSpell(_W) == READY and GetDistance(WPosition) < Skills.skillW.range and WHitChance >= 2 then
+      CastSpell(_W, WPosition.x, WPosition.z)
+		end
+  else
+    local WPosition = PredW:GetPrediction(Target)
+
+    if WPosition ~= nil and GetDistance(WPosition) < Skills.skillW.range and myHero:CanUseSpell(_W) == READY then
+      CastSpell(_W, WPosition.x, WPosition.z)
+    end
+  end
+end
+
+--Auto Ignite--
+function AutoIgnite()
+	
+end
+
 --Construct Settings Menu--
 function AddMenu()
 
@@ -237,6 +315,9 @@ function AddMenu()
 	Menu:addSubMenu("[SynfiniteEzreal] Hotkeys Settings", "Hotkeys")
 	Menu:addSubMenu("[SynfiniteEzreal] QuickCast Settings", "QuickCast")
 	Menu:addSubMenu("[SynfiniteEzreal] Harass Settings", "Harass")
+	Menu:addSubMenu("[SynfiniteEzreal] Orbwalk Settings", "Orbwalk")
+	-- SOW-Orbwalking --
+	theSOW:LoadToMenu(Menu.Orbwalk)
 	
 	--Drawing Menu--
 	Menu.Drawings:addParam("DrawA", "   [A] Auto Attack Range", SCRIPT_PARAM_ONOFF, true)
@@ -244,13 +325,14 @@ function AddMenu()
 	Menu.Drawings:addParam("DrawW", "   [W] Essence Flux Range", SCRIPT_PARAM_ONOFF, true)
 	Menu.Drawings:addParam("NoLagToggle", "   [Draw Lag-Free Circles]", SCRIPT_PARAM_ONOFF, false)
 	
-	--Hotkeys Menu--
-	Menu.Hotkeys:addParam("LaneFarm", "   Set Farming Key", SCRIPT_PARAM_ONKEYDOWN, false, GetKey("X"))
-	
 	--QuickCast Menu--
 	Menu.QuickCast:addParam("AutoE", "   [QC] Arcane Shift", SCRIPT_PARAM_ONKEYDOWN, false,GetKey("E"))
 	
 	--Harass Menu--
-	Menu.Harass:addParam("Harass", "   Set Harass Key", SCRIPT_PARAM_ONKEYDOWN, false,GetKey("C"))
+	Menu.Harass:addParam("HarassQ", "   [Q] Use Mystic Shot", SCRIPT_PARAM_ONOFF, true)
+	Menu.Harass:addParam("HarassW", "   [W] Use Essence Flux", SCRIPT_PARAM_ONOFF, false)
+	
+	--Target Selector--
+	Menu:addTS(targetSelect)
 	
 end
