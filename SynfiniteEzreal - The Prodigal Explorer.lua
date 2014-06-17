@@ -154,7 +154,6 @@ function OnTick()
 	theSOW:ForceTarget(Target)
 	
 	--Hotkey Toggles--
-	if Menu.Hotkeys.LaneFarm then Farming() end
 	if Menu.QuickCast.AutoE then AutoE() end
 	if Menu.Orbwalk.Mode1 then Harass() end
 	if Menu.Orbwalk.Mode0 then SBTWCombo() end
