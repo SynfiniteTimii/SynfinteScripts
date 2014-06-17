@@ -8,4 +8,8 @@
 ####Who is/are the author[s] of SynfiniteScript?
 ######Currently, the only developer of this series of scripts is me [Timii].
 
+####Are the scripts free?
+######Yes, currently, all the scripts I offer are for free. Although it would help if you donated!
+
+
 
