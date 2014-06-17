@@ -1,5 +1,5 @@
 --[[ 
-	AoESkillshotPosition 2.0 by monogato
+	AoESkillshotPosition 2.0 by monogato.
 	
 	GetAoESpellPosition(radius, main_target, [delay]) returns best position in order to catch as many enemies as possible with your AoE skillshot, making sure you get the main target.
 	Note: You can optionally add delay in ms for prediction (VIP if avaliable, normal else).
