@@ -1,4 +1,4 @@
---Script Info--
+--Script Information--
 local Version = "0.01"
 local ScriptVersion = "0.01"
 local AutoUpdate = true
