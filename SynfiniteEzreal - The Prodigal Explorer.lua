@@ -61,14 +61,11 @@ end
 --End Auto Update--
 
 --Check for Required Libraries: Thanks to QQQ--
-local VIP_LIBS = {
+local LIBS = {
 	["VPrediction"] = "https://raw.github.com/Hellsing/BoL/master/common/VPrediction.lua",
 	["SOW"] = "https://raw.github.com/Hellsing/BoL/master/common/SOW.lua"
 }
-local NORMAL_LIBS = {
-	["AoE_Skillshot_Position"] = "https://raw.github.com/SynfiniteTimii/SynfinteScripts/master/Common/AoE_Skillshot_Position.lua",
-	["SOW"] = "https://raw.github.com/Hellsing/BoL/master/common/SOW.lua"
-}
+
 local DOWNLOADING_LIBS = false
 local DOWNLOAD_COUNT = 0
 
@@ -81,33 +78,19 @@ function AfterDownload()
 	end
 end
 
-if VIP_USER then
-	for DOWNLOAD_LIB_NAME, DOWNLOAD_LIB_URL in pairs(VIP_LIBS) do
-		if FileExist(LIB_PATH .. DOWNLOAD_LIB_NAME .. ".lua") then
-			require(DOWNLOAD_LIB_NAME)
-		else
-			DOWNLOADING_LIBS = true
-			DOWNLOAD_COUNT = DOWNLOAD_COUNT + 1
 
-			print("<font color=\"#000000\">[</font><font color=\"#FFBF00\">"..LoadedText.."</font><font color=\"#000000\">]</font> <font color=\"#848484\">Not all required libraries are installed. Downloading "..DOWNLOAD_LIB_NAME..".</font>")
-			DownloadFile(DOWNLOAD_LIB_URL, LIB_PATH .. DOWNLOAD_LIB_NAME..".lua", AfterDownload)
-		end
+for DOWNLOAD_LIB_NAME, DOWNLOAD_LIB_URL in pairs(LIBS) do
+	if FileExist(LIB_PATH .. DOWNLOAD_LIB_NAME .. ".lua") then
+		require(DOWNLOAD_LIB_NAME)
+	else
+		DOWNLOADING_LIBS = true
+		DOWNLOAD_COUNT = DOWNLOAD_COUNT + 1
+		print("<font color=\"#000000\">[</font><font color=\"#FFBF00\">"..LoadedText.."</font><font color=\"#000000\">]</font> <font color=\"#848484\">Not all required libraries are installed. Downloading "..DOWNLOAD_LIB_NAME..".</font>")
+		DownloadFile(DOWNLOAD_LIB_URL, LIB_PATH .. DOWNLOAD_LIB_NAME..".lua", AfterDownload)
 	end
-	if DOWNLOADING_LIBS then return end
-else
-	for DOWNLOAD_LIB_NAME, DOWNLOAD_LIB_URL in pairs(NORMAL_LIBS) do
-		if FileExist(LIB_PATH .. DOWNLOAD_LIB_NAME .. ".lua") then
-			require(DOWNLOAD_LIB_NAME)
-		else
-			DOWNLOADING_LIBS = true
-			DOWNLOAD_COUNT = DOWNLOAD_COUNT + 1
-
-			print("<font color=\"#000000\">[</font><font color=\"#FFBF00\">"..LoadedText.."</font><font color=\"#000000\">]</font> <font color=\"#848484\">Not all required libraries are installed. Downloading "..DOWNLOAD_LIB_NAME..".</font>")
-			DownloadFile(DOWNLOAD_LIB_URL, LIB_PATH .. DOWNLOAD_LIB_NAME..".lua", AfterDownload)
-		end
-	end
-	if DOWNLOADING_LIBS then return end
 end
+if DOWNLOADING_LIBS then return end
+
 --End Check Req. Libs--
 
 --Variables--
@@ -132,14 +115,8 @@ local UltD = 0
 function OnLoad()
 	AUpdate()
 	CheckI()
-	if VIP_USER then
-    VPred = VPrediction()
-		theSOW = SOW(VPred)
-  else
-		PredQ = TargetPrediction(Skills.skillQ.range, Skills.skillQ.speed / 1000, Skills.skillQ.delay * 1000, Skills.skillQ.width)
-		PredW = TargetPrediction(Skills.skillW.range, Skills.skillW.speed / 1000, Skills.skillW.delay * 1000, Skills.skillW.width)
-		PredR = TargetPrediction(Skills.skillR.range, Skills.skillR.speed / 1000, Skills.skillR.delay * 1000, Skills.skillR.width)
-  end
+  VPred = VPrediction()
+	theSOW = SOW(VPred)
 	AddMenu()
 	
 	print("<font color=\"#000000\">[</font><font color=\"#FFBF00\">"..LoadedText.."</font><font color=\"#000000\">]</font> <font color=\"#8A0808\">v"..ScriptVersion.."</font> <font color=\"#848484\">successfully loaded.</font>")
@@ -310,50 +287,26 @@ end
 
 --Q Cast--
 function QCast (Target)
-	if VIP_USER then
-    local QPosition, QHitChance = VPred:GetLineCastPosition(Target, Skills.skillQ.delay, Skills.skillQ.width, Skills.skillQ.range, Skills.skillQ.speed, myHero, true)
-    if QPosition ~= nil and myHero:CanUseSpell(_Q) == READY and GetDistance(QPosition) < Skills.skillQ.range and QHitChance >= 2 then
-      CastSpell(_Q, QPosition.x, QPosition.z)
-		end
-  else
-    local QPosition = PredQ:GetPrediction(Target)
-
-    if QPosition ~= nil and GetDistance(QPosition) < Skills.skillQ.range and myHero:CanUseSpell(_Q) == READY and not GetMinionCollision(myHero, QPosition, Skills.skillQ.width) then
-      CastSpell(_Q, QPosition.x, QPosition.z)
-    end
-  end
+  local QPosition, QHitChance = VPred:GetLineCastPosition(Target, Skills.skillQ.delay, Skills.skillQ.width, Skills.skillQ.range, Skills.skillQ.speed, myHero, true)
+  if QPosition ~= nil and myHero:CanUseSpell(_Q) == READY and GetDistance(QPosition) < Skills.skillQ.range and QHitChance >= 2 then
+    CastSpell(_Q, QPosition.x, QPosition.z)
+	end
 end
 
 --W Cast--
 function WCast (Target)
-	if VIP_USER then
-    local WPosition, WHitChance = VPred:GetLineCastPosition(Target, Skills.skillW.delay, Skills.skillW.width, Skills.skillW.range, Skills.skillW.speed, myHero, true)
-    if WPosition ~= nil and myHero:CanUseSpell(_W) == READY and GetDistance(WPosition) < Skills.skillW.range and WHitChance >= 2 then
-      CastSpell(_W, WPosition.x, WPosition.z)
-		end
-  else
-    local WPosition = PredW:GetPrediction(Target)
-
-    if WPosition ~= nil and GetDistance(WPosition) < Skills.skillW.range and myHero:CanUseSpell(_W) == READY then
-      CastSpell(_W, WPosition.x, WPosition.z)
-    end
-  end
+  local WPosition, WHitChance = VPred:GetLineCastPosition(Target, Skills.skillW.delay, Skills.skillW.width, Skills.skillW.range, Skills.skillW.speed, myHero, true)
+  if WPosition ~= nil and myHero:CanUseSpell(_W) == READY and GetDistance(WPosition) < Skills.skillW.range and WHitChance >= 2 then
+    CastSpell(_W, WPosition.x, WPosition.z)
+	end
 end
 
 --R Cast--
 function RCast (Target)
-	if VIP_USER then
-    local RPosition, RHitChance = VPred:GetLineCastPosition(Target, Skills.skillR.delay, Skills.skillR.width, Skills.skillR.range, Skills.skillR.speed, myHero, false)
+  local RPosition, RHitChance = VPred:GetLineCastPosition(Target, Skills.skillR.delay, Skills.skillR.width, Skills.skillR.range, Skills.skillR.speed, myHero, false)
 
-    if RPosition ~= nil and GetDistance(RPosition) < Skills.skillR.range and myHero:CanUseSpell(_R) == READY and RHitChance >= 2 then
-      CastSpell(_R, RPosition.x, RPosition.z)
-    end
-  else
-    local RPosition = RPrediction:GetPrediction(Target)
-
-    if RPosition ~= nil and GetDistance(RPosition) < Skills.skillR.range and myHero:CanUseSpell(_R) == READY then
-      CastSpell(_R, RPosition.x, RPosition.z)
-    end
+  if RPosition ~= nil and GetDistance(RPosition) < Skills.skillR.range and myHero:CanUseSpell(_R) == READY and RHitChance >= 2 then
+    CastSpell(_R, RPosition.x, RPosition.z)
   end
 end
 
