@@ -149,7 +149,7 @@ end
 function OnTick()
 	if myHero.dead then return end
 	CheckCD()
-	CalculateDMG()
+	--CalculateDMG()
 	Target = GetCustomTarget()
 	theSOW:ForceTarget(Target)
 	
@@ -377,9 +377,7 @@ function CheckI()
 end
 
 --Damage Calculation & Display--
-function CalculateDMG()
-	
-end
+--To Be Added in v0.2--
 
 --Construct Settings Menu--
 function AddMenu()
