@@ -27,7 +27,7 @@ if myHero.charName ~= "Ezreal" then return end
 local UPDATE_FILE_PATH = SCRIPT_PATH.."SynfiniteEzreal - The Prodigal Explorer"
 local UPDATE_NAME = "SynfiniteEzreal - The Prodigal Explorer"
 local UPDATE_HOST = "raw.github.com"
-local UPDATE_PATH = "/SynfiniteTimii/SynfinteScripts/master/SynfiniteEzreal%20-%20The%20Prodigal%20Explorer.lua?chunk="..math.random(1, 1000)
+local UPDATE_PATH = "/SynfiniteTimii/SynfinteScripts/master/Synfinite%20Ezreal%20-%20The%20Prodigal%20Explorer.lua?chunk="..math.random(1, 1000)
 local UPDATE_FILE_PATH = SCRIPT_PATH.."SynfiniteEzreal - The Prodigal Explorer.lua"
 local UPDATE_URL = "https://"..UPDATE_HOST..UPDATE_PATH
 
