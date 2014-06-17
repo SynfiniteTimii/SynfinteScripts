@@ -1,4 +1,4 @@
---Script Information--
+--Script Info--
 local Version = "0.01"
 local ScriptVersion = "0.01"
 local AutoUpdate = true
@@ -387,7 +387,6 @@ function AddMenu()
 	
 	--Sub Menus--
 	Menu:addSubMenu("[SynfiniteEzreal] Drawing Settings", "Drawings")
-	Menu:addSubMenu("[SynfiniteEzreal] Hotkeys Settings", "Hotkeys")
 	Menu:addSubMenu("[SynfiniteEzreal] QuickCast Settings", "QuickCast")
 	Menu:addSubMenu("[SynfiniteEzreal] Harass Settings", "Harass")
 	Menu:addSubMenu("[SynfiniteEzreal] SBTWCombo Settings", "SBTWCombo")
